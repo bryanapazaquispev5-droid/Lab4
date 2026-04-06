@@ -97,6 +97,28 @@ fun FormularioTecsupPro() {
                 )
             }
 
+            // 🔥 NUEVO CONTENEDOR (Card)
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    elevation = CardDefaults.cardElevation(8.dp)
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            "Información del estudiante",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text("Complete los campos para registrarse correctamente.")
+                    }
+                }
+            }
+
             item {
                 OutlinedTextField(
                     value = nombre,
