@@ -135,16 +135,27 @@ fun FormularioTecsupPro() {
                 )
             }
 
+            // MODIFICACIÓN DE ESTILO AL TERCER COMPONENTE (SWITCH)
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Recibir notificaciones por correo", fontSize = 14.sp)
+                    Text(
+                        text = "Notificaciones activas",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold, // Estilo: Negrita
+                        color = Color(0xFF1A237E)     // Estilo: Color azul
+                    )
                     Switch(
                         checked = notificaciones,
-                        onCheckedChange = { notificaciones = it }
+                        onCheckedChange = { notificaciones = it },
+                        // Estilo: Colores personalizados para el Switch
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = Color(0xFF1A237E),
+                            checkedTrackColor = Color(0xFFBBDEFB)
+                        )
                     )
                 }
             }
