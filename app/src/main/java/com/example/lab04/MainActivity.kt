@@ -15,11 +15,10 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -44,34 +43,39 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FormularioTecsupPro() {
-
     var nombre by remember { mutableStateOf("") }
     var codigo by remember { mutableStateOf("") }
     var carrera by remember { mutableStateOf("") }
+    var aceptoTerminos by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDialog = false
+                    scope.launch {
+                        snackbarHostState.showSnackbar("Estudiante $nombre registrado")
+                    }
+                }) { Text("Confirmar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) { Text("Cancelar") }
+            },
+            title = { Text("Confirmar Registro") },
+            text = { Text("¿Deseas registrar a $nombre con código $codigo en la carrera de $carrera?") }
+        )
+    }
+
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                Snackbar(
-                    containerColor = Color(0xFF1A237E),
-                    contentColor = Color.White,
-                    actionColor = Color(0xFFFFC107),
-                    shape = RoundedCornerShape(16.dp),
-                    snackbarData = data
-                )
-            }
-        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        "TECSUP - Registro",
-                        fontWeight = FontWeight.ExtraBold
-                    )
-                },
+                title = { Text("TECSUP - Registro", fontWeight = FontWeight.Bold) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = Color(0xFF1A237E),
                     titleContentColor = Color.White
@@ -79,42 +83,23 @@ fun FormularioTecsupPro() {
             )
         }
     ) { padding ->
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .background(Color(0xFFF8F9FA)),
             contentPadding = PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
-            item {
-                Text(
-                    "Panel de Registro",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-
-            // 🔥 NUEVO CONTENEDOR (Card)
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
-                    elevation = CardDefaults.cardElevation(8.dp)
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text(
-                            "Información del estudiante",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text("Complete los campos para registrarse correctamente.")
+                        Text("Información Académica", fontWeight = FontWeight.Bold, color = Color(0xFF1A237E))
+                        Text("Ingrese sus datos para habilitar el registro.", fontSize = 14.sp)
                     }
                 }
             }
@@ -125,8 +110,7 @@ fun FormularioTecsupPro() {
                     onValueChange = { nombre = it },
                     label = { Text("Nombre Completo") },
                     modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.Person, null) },
-                    shape = RoundedCornerShape(12.dp)
+                    leadingIcon = { Icon(Icons.Default.Person, null) }
                 )
             }
 
@@ -136,8 +120,7 @@ fun FormularioTecsupPro() {
                     onValueChange = { codigo = it },
                     label = { Text("Código") },
                     modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.Info, null) },
-                    shape = RoundedCornerShape(12.dp)
+                    leadingIcon = { Icon(Icons.Default.Info, null) }
                 )
             }
 
@@ -147,71 +130,30 @@ fun FormularioTecsupPro() {
                     onValueChange = { carrera = it },
                     label = { Text("Carrera") },
                     modifier = Modifier.fillMaxWidth(),
-                    leadingIcon = { Icon(Icons.Default.AccountBox, null) },
-                    shape = RoundedCornerShape(12.dp)
+                    leadingIcon = { Icon(Icons.Default.AccountBox, null) }
                 )
             }
 
             item {
-                Button(
-                    onClick = {
-                        if (nombre.isNotBlank()) {
-                            scope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = "Estudiante $nombre registrado con éxito",
-                                    actionLabel = "ENTENDIDO",
-                                    duration = SnackbarDuration.Indefinite
-                                )
-
-                                if (result == SnackbarResult.ActionPerformed) {
-                                    nombre = ""
-                                    codigo = ""
-                                    carrera = ""
-                                }
-                            }
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A237E)
-                    )
-                ) {
-                    Icon(Icons.AutoMirrored.Filled.Send, null)
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        "AÑADIR AHORA",
-                        fontWeight = FontWeight.ExtraBold
-                    )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Checkbox(checked = aceptoTerminos, onCheckedChange = { aceptoTerminos = it })
+                    Text("Confirmo que los datos son correctos", fontSize = 14.sp)
                 }
             }
 
             item {
-                val progreso =
-                    if (nombre.isNotEmpty() && codigo.isNotEmpty()) 1f else 0.5f
-
-                LinearProgressIndicator(
-                    progress = { progreso },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(10.dp)
-                        .clip(RoundedCornerShape(5.dp)),
-                    color = if (progreso == 1f)
-                        Color(0xFF4CAF50)
-                    else
-                        Color(0xFF1A237E)
-                )
+                Button(
+                    onClick = { showDialog = true },
+                    enabled = nombre.isNotBlank() && codigo.isNotBlank() && carrera.isNotBlank() && aceptoTerminos,
+                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1A237E))
+                ) {
+                    Icon(Icons.AutoMirrored.Filled.Send, null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("ENVIAR REGISTRO", fontWeight = FontWeight.Bold)
+                }
             }
         }
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewPro() {
-    MaterialTheme {
-        FormularioTecsupPro()
     }
 }
