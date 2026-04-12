@@ -47,6 +47,7 @@ fun FormularioTecsupPro() {
     var codigo by remember { mutableStateOf("") }
     var carrera by remember { mutableStateOf("") }
     var aceptoTerminos by remember { mutableStateOf(false) }
+    var notificaciones by remember { mutableStateOf(true) }
     var showDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -59,7 +60,7 @@ fun FormularioTecsupPro() {
                 TextButton(onClick = {
                     showDialog = false
                     scope.launch {
-                        snackbarHostState.showSnackbar("Estudiante $nombre registrado")
+                        snackbarHostState.showSnackbar("Registro exitoso: $nombre")
                     }
                 }) { Text("Confirmar") }
             },
@@ -67,7 +68,7 @@ fun FormularioTecsupPro() {
                 TextButton(onClick = { showDialog = false }) { Text("Cancelar") }
             },
             title = { Text("Confirmar Registro") },
-            text = { Text("¿Deseas registrar a $nombre con código $codigo en la carrera de $carrera?") }
+            text = { Text("¿Deseas registrar a $nombre ($codigo) en $carrera?") }
         )
     }
 
@@ -99,7 +100,7 @@ fun FormularioTecsupPro() {
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text("Información Académica", fontWeight = FontWeight.Bold, color = Color(0xFF1A237E))
-                        Text("Ingrese sus datos para habilitar el registro.", fontSize = 14.sp)
+                        Text("Complete los datos para habilitar el registro.", fontSize = 14.sp)
                     }
                 }
             }
@@ -132,6 +133,20 @@ fun FormularioTecsupPro() {
                     modifier = Modifier.fillMaxWidth(),
                     leadingIcon = { Icon(Icons.Default.AccountBox, null) }
                 )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Recibir notificaciones por correo", fontSize = 14.sp)
+                    Switch(
+                        checked = notificaciones,
+                        onCheckedChange = { notificaciones = it }
+                    )
+                }
             }
 
             item {
