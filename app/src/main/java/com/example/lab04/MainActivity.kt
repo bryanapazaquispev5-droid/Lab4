@@ -95,12 +95,18 @@ fun FormularioTecsupPro() {
             item {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                    // Cambiamos el color de fondo a un azul muy claro
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+                    // Le damos más sombra (elevación)
+                    elevation = CardDefaults.cardElevation(8.dp)
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Text("Información Académica", fontWeight = FontWeight.Bold, color = Color(0xFF1A237E))
-                        Text("Complete los datos para habilitar el registro.", fontSize = 14.sp)
+                        Text(
+                            text = "Información Académica",
+                            fontWeight = FontWeight.ExtraBold, // Más negrita
+                            color = Color(0xFF0D47A1) // Azul más oscuro
+                        )
+                        Text("Ingrese sus datos para habilitar el registro.", fontSize = 14.sp)
                     }
                 }
             }
